@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>キャリア目標に基づくコース推薦</title>
+    <!-- BootstrapのCDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f5f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+        .btn-custom:hover {
+            background-color: #218838;
+            color: white;
+        }
+        #resultOutput {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        #loadingSpinner {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>キャリア目標に基づくコース推薦</h1>
+            <p>あなたのキャリアに最適なコースを見つけましょう！</p>
+        </div>
+
+        <!-- クエリパラメータ入力フォーム -->
+        <div class="card mb-4 p-4">
+            <div class="card-body">
+                <h4 class="card-title">キャリア目標を入力</h4>
+                <form id="queryForm">
+                    <div class="mb-3">
+                        <label for="careerGoal" class="form-label">キャリア目標:</label>
+                        <input type="text" class="form-control" id="careerGoal" placeholder="例: AIエンジニア" required>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100">コースを推薦する</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- スピナー -->
+        <div id="loadingSpinner" class="text-center my-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">検索中...</p>
+        </div>
+
+        <!-- 結果表示エリア -->
+        <div id="resultSection" class="d-none">
+            <div id="resultOutput" class="mt-3"></div>
+        </div>
+    </div>
+
+    <!-- BootstrapのJSと依存するPopper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+    <!-- クエリ送信と結果表示のJavaScript -->
+    <script>
+        document.getElementById('queryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const careerGoal = document.getElementById('careerGoal').value;
+            const url = `https://olumybzbkw5phnjmqiruqtk47q0jltfl.lambda-url.ap-northeast-1.on.aws/?career_goal=${encodeURIComponent(careerGoal)}`;
+            
+            // スピナーを表示して結果セクションを非表示
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('resultSection').classList.add('d-none');
+
+            fetch(url)
+                .then(response => response.text()) // テキストとしてレスポンスを取得
+                .then(text => {
+                    // スピナーを非表示にする
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    document.getElementById('resultSection').classList.remove('d-none');
+
+                    // 受け取ったレスポンスをそのまま表示
+                    const resultOutput = document.getElementById('resultOutput');
+                    resultOutput.textContent = text;
+
+                    console.log('受け取ったレスポンス:', text); // デバッグ用にレスポンスを表示
+                })
+                .catch(error => {
+                    alert('エラーが発生しました: ' + error.message);
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                });
+        });
+    </script>
+</body>
+</html>
