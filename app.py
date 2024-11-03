@@ -17,6 +17,10 @@ if st.button('コースを推薦する'):
             # ステータスコードを表示
             st.write(f"ステータスコード: {response.status_code}")
 
+            # レスポンス全体を表示（デバッグ用）
+            st.write("APIレスポンス全体:")
+            st.json(response.json())
+
             if response.status_code == 200:
                 # レスポンスをJSONとしてロード
                 data = response.json()
