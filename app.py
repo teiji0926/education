@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import json
 
 # エンドポイントのURL
 url = 'https://olumybzbkw5phnjmqiruqtk47q0jltfl.lambda-url.ap-northeast-1.on.aws/'
@@ -12,21 +11,21 @@ career_goal = st.text_input('キャリア目標を入力してください:', 'A
 if st.button('コースを推薦する'):
     if career_goal:
         try:
+            # APIリクエストを送信
             response = requests.get(url, params={'career_goal': career_goal})
 
             # ステータスコードを表示
             st.write(f"ステータスコード: {response.status_code}")
 
-            # レスポンス全体を表示（デバッグ用）
-            st.write("APIレスポンス全体:")
-            st.json(response.json())
+            # responseオブジェクト全体を表示
+            st.write("APIレスポンス全体 (responseオブジェクト):")
+            st.write(response)  # responseオブジェクトをそのまま表示
 
             if response.status_code == 200:
-                # レスポンスをJSONとしてロード
+                # 正常にレスポンスが返された場合にJSONを解析
                 data = response.json()
                 suggestions = data.get('suggestions', [])
 
-                # 'suggestions' がリスト形式かを確認して処理
                 if isinstance(suggestions, list) and suggestions:
                     # 各コース情報を表示
                     for course in suggestions:
