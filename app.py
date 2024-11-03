@@ -1,7 +1,6 @@
 import streamlit as st
 import requests
 import json
-import re
 
 # エンドポイントのURL
 url = 'https://olumybzbkw5phnjmqiruqtk47q0jltfl.lambda-url.ap-northeast-1.on.aws/'
@@ -19,37 +18,21 @@ if st.button('コースを推薦する'):
             st.write(f"ステータスコード: {response.status_code}")
 
             if response.status_code == 200:
-                # レスポンスをテキストで表示（デバッグ用）
-                response_text = response.text
+                # レスポンスをJSONとしてロード
+                data = response.json()
+                suggestions = data.get('suggestions', [])
 
-                # 'suggestions'フィールドの抽出
-                data = json.loads(response_text)
-                suggestions = data.get('suggestions', '')
-
-                # バッククォートで囲まれているJSON部分を抽出
-                json_match = re.search(r'```json\n(.*?)\n```', suggestions, re.DOTALL)
-                if json_match:
-                    json_str = json_match.group(1)
-
-                    # シングルクォートをダブルクォートに置き換える
-                    json_str = json_str.replace("'", '"')
-
-                    try:
-                        # JSON文字列をリストに変換
-                        course_list = json.loads(json_str)
-
-                        # 各コース情報を表示
-                        for course in course_list:
-                            with st.container():
-                                st.subheader(course.get('コース名', 'コース名不明'))
-                                st.write(f"提供元: {course.get('提供元', '不明')}")
-                                st.write(f"内容: {course.get('内容', '不明')}")
-                                st.markdown("---")  # 区切り線
-
-                    except json.JSONDecodeError as e:
-                        st.error(f"JSONのパースエラー: {e}")
+                # 'suggestions' がリスト形式かを確認して処理
+                if isinstance(suggestions, list) and suggestions:
+                    # 各コース情報を表示
+                    for course in suggestions:
+                        with st.container():
+                            st.subheader(course.get('コース名', 'コース名不明'))
+                            st.write(f"提供元: {course.get('提供元', '不明')}")
+                            st.write(f"内容: {course.get('内容', '不明')}")
+                            st.markdown("---")  # 区切り線
                 else:
-                    st.error("JSON形式のデータが見つかりませんでした。")
+                    st.error("コース情報が見つかりませんでした。")
             else:
                 st.error(f"APIリクエストに失敗しました。ステータスコード: {response.status_code}")
         except Exception as e:
