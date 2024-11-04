@@ -37,7 +37,14 @@ if st.button('コースを推薦する'):
                 else:
                     st.error("コース情報が見つかりませんでした。")
             else:
-                st.error(f"APIリクエストに失敗しました。ステータスコード: {response.status_code}")
+                # ステータスコードが200以外の場合、エラーメッセージの詳細を表示
+                try:
+                    error_message = response.json()
+                    st.error(f"APIリクエストに失敗しました。ステータスコード: {response.status_code}, エラーメッセージ: {error_message}")
+                except ValueError:
+                    st.error(f"APIリクエストに失敗しました。ステータスコード: {response.status_code}")
+        except requests.Timeout:
+            st.error("リクエストがタイムアウトしました。時間をおいて再試行してください。")
         except Exception as e:
             st.error(f"リクエストエラー: {e}")
     else:
