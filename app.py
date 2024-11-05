@@ -38,11 +38,6 @@ if st.button('コースを推薦する'):
                     for course_str in courses:
                         course_info = eval(course_str)  # 文字列を辞書に変換
 
-                        # 元の表示内容を保持しつつ、見やすく表示
-                        st.write("提供元:", course_info.get("提供元", "不明"))
-                        st.write("コース名:", course_info.get("コース名", "不明"))
-                        st.write("内容:", course_info.get("内容", "不明"))
-
                         # 各項目を太字で大きめのサイズで強調表示
                         st.markdown(f"<span style='font-size:20px; font-weight:bold;'>提供元: {course_info.get('提供元', '不明')}</span>", unsafe_allow_html=True)
                         st.markdown(f"<span style='font-size:18px; font-weight:bold;'>コース名: {course_info.get('コース名', '不明')}</span>", unsafe_allow_html=True)
