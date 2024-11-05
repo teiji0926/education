@@ -51,4 +51,16 @@ if st.button('コースを推薦する'):
                     break  # 成功したらループを抜ける
 
                 else:
-                    st.warning(f"エラー: ステータスコードが {
+                    st.warning(f"エラー: ステータスコードが {response.status_code} です。リトライ {attempt + 1} 回目")
+                    time.sleep(RETRY_DELAY)  # リトライ間隔
+
+            except Exception as e:
+                st.error(f"リクエストエラー: {e}")
+                time.sleep(RETRY_DELAY)  # リトライ間隔
+
+        # 最大リトライ回数に達した場合のエラーメッセージ
+        else:
+            st.error("リトライしても503エラーが発生しました。後ほど再度お試しください。")
+
+    else:
+        st.warning('キャリア目標を入力してください。')
