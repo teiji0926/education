@@ -22,9 +22,6 @@ if st.button('コースを推薦する'):
             # ステータスコードを表示
             st.write(f"ステータスコード: {response.status_code}")
 
-            # レスポンス内容をそのまま表示して確認
-            st.write("APIレスポンス内容:")
-            st.text(response.text)
 
             if response.status_code == 200:
                 # '''json''' タグを削除してリストの形式だけを表示する
