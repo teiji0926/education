@@ -11,28 +11,31 @@ career_goal = st.text_input('キャリア目標を入力してください:', 'A
 # コースを推薦するボタン
 if st.button('コースを推薦する'):
     if career_goal:
-        # APIリクエストを送信
-        response = requests.get(url, params={'career_goal': career_goal})
-        
-        # ステータスコードを表示
-        st.write(f"ステータスコード: {response.status_code}")
-        
-        # レスポンス内容の型を確認
-        st.write(f"レスポンスの型: {type(response.text)}")
-        
-        # レスポンス内容をそのまま表示して確認
-        st.write("APIレスポンス内容:")
-        st.text(response.text)
-
         try:
-            # JSON形式としてレスポンスを解析
-            data = response.json()  # response.textではなく、response.json()を使用
-            if isinstance(data, list):
-                for course in data:
-                    st.write(course)  # 各コースをそのまま表示
+            # APIリクエストを送信
+            response = requests.get(url, params={'career_goal': career_goal})
+
+            # ステータスコードを表示
+            st.write(f"ステータスコード: {response.status_code}")
+
+            # レスポンス内容をそのまま表示して確認
+            st.write("APIレスポンス内容:")
+            st.text(response.text)
+
+            # JSONとしてパースしてリスト形式で表示
+            if response.status_code == 200:
+                try:
+                    data = json.loads(response.text)  # JSON文字列をリスト型に変換
+                    if isinstance(data, list):
+                        for course in data:
+                            st.write(course)  # 各コースをそのまま表示
+                    else:
+                        st.error("レスポンスがリスト形式ではありません。")
+                except json.JSONDecodeError:
+                    st.error("レスポンスをJSONとしてパースできませんでした。")
             else:
-                st.error("レスポンスがリスト形式ではありません。")
-        except json.JSONDecodeError:
-            st.error("レスポンスがJSON形式ではありません。")
-else:
-    st.warning('キャリア目標を入力してください。')
+                st.error(f"エラー: ステータスコードが {response.status_code} です。")
+        except Exception as e:
+            st.error(f"リクエストエラー: {e}")
+    else:
+        st.warning('キャリア目標を入力してください。')
