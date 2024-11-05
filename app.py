@@ -19,23 +19,24 @@ if st.button('コースを推薦する'):
 
             # responseオブジェクト全体を表示
             st.write("APIレスポンス全体 (responseオブジェクト):")
-            st.write(response.text)  # responseオブジェクトをそのまま表示
+            st.write(response.text)  # レスポンスのテキストをそのまま表示
 
             if response.status_code == 200:
-                # 正常にレスポンスが返された場合にJSONを解析
-                data = response.json()
-                suggestions = data.get('suggestions', [])
-
-                if isinstance(suggestions, list) and suggestions:
-                    # 各コース情報を表示
-                    for course in suggestions:
-                        with st.container():
-                            st.subheader(course.get('コース名', 'コース名不明'))
-                            st.write(f"提供元: {course.get('提供元', '不明')}")
-                            st.write(f"内容: {course.get('内容', '不明')}")
-                            st.markdown("---")  # 区切り線
-                else:
-                    st.error("コース情報が見つかりませんでした。")
+                try:
+                    # JSONをリストとして解析
+                    data = response.json()
+                    if isinstance(data, list) and data:  # リスト形式かどうか確認
+                        for course in data:
+                            with st.container():
+                                st.subheader(course.get('コース名', 'コース名不明'))
+                                st.write(f"提供元: {course.get('提供元', '不明')}")
+                                st.write(f"内容: {course.get('内容', '不明')}")
+                                st.markdown("---")  # 区切り線
+                    else:
+                        st.error("コース情報が見つかりませんでした。")
+                except ValueError:
+                    st.error("レスポンスがJSON形式ではありません。内容:")
+                    st.text(response.text)
             else:
                 # ステータスコードが200以外の場合、エラーメッセージの詳細を表示
                 try:
