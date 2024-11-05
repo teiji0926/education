@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import json
+import re
 
 # APIエンドポイントのURL
 url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
@@ -22,17 +22,18 @@ if st.button('コースを推薦する'):
             st.write("APIレスポンス内容:")
             st.text(response.text)
 
-            # JSONとしてパースしてリスト形式で表示
             if response.status_code == 200:
-                try:
-                    data = json.loads(response.text)  # JSON文字列をリスト型に変換
-                    if isinstance(data, list):
-                        for course in data:
-                            st.write(course)  # 各コースをそのまま表示
-                    else:
-                        st.error("レスポンスがリスト形式ではありません。")
-                except json.JSONDecodeError:
-                    st.error("レスポンスをJSONとしてパースできませんでした。")
+                # '''json''' タグを削除してリストの形式だけを表示する
+                cleaned_text = re.sub(r"```json|```", "", response.text.strip())
+
+                # 各コース情報を個別に表示
+                courses = re.findall(r"{.*?}", cleaned_text)  # 各コース情報を抽出
+                for course_str in courses:
+                    course_info = eval(course_str)  # 文字列を辞書に変換
+                    st.write(f"提供元: {course_info.get('提供元', '不明')}")
+                    st.write(f"コース名: {course_info.get('コース名', '不明')}")
+                    st.write(f"内容: {course_info.get('内容', '不明')}")
+                    st.markdown("---")  # 区切り線
             else:
                 st.error(f"エラー: ステータスコードが {response.status_code} です。")
         except Exception as e:
