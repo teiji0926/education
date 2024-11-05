@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # エンドポイントのURL
-url = 'https://olumybzbkw5phnjmqiruqtk47q0jltfl.lambda-url.ap-northeast-1.on.aws/'
+url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
 
 # キャリア目標の入力
 career_goal = st.text_input('キャリア目標を入力してください:', 'AIエンジニア')
