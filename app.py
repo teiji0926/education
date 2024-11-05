@@ -17,7 +17,7 @@ if st.button('コースを推薦する'):
         st.write(f"ステータスコード: {response.status_code}")
         # レスポンス内容をそのまま表示して確認
         st.write("APIレスポンス内容:")
-        st.text(response.text)
+        st.text(response)
 else:
     st.warning('キャリア目標を入力してください。')
         
