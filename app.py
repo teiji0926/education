@@ -7,6 +7,7 @@ url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/educat
 
 # キャリア目標の入力
 career_goal = st.text_input('キャリア目標を入力してください:', 'AIエンジニア')
+st.text('検索には30秒くらいかかります。気長にお待ちください。')
 
 # コースを推薦するボタン
 if st.button('コースを推薦する'):
@@ -20,7 +21,6 @@ if st.button('コースを推薦する'):
 
             # レスポンス内容をそのまま表示して確認
             st.write("APIレスポンス内容:")
-            st.text(response.text)
 
             if response.status_code == 200:
                 # '''json''' タグを削除してリストの形式だけを表示する
