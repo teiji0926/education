@@ -19,7 +19,7 @@ if st.button('コースを推薦する'):
 
             # responseオブジェクト全体を表示
             st.write("APIレスポンス全体 (responseオブジェクト):")
-            st.write(response)  # responseオブジェクトをそのまま表示
+            st.write(response.text)  # responseオブジェクトをそのまま表示
 
             if response.status_code == 200:
                 # 正常にレスポンスが返された場合にJSONを解析
