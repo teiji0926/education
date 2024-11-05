@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import json
 
-# エンドポイントのURL
+# APIエンドポイントのURL
 url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
 
 # キャリア目標の入力
@@ -23,13 +23,21 @@ if st.button('コースを推薦する'):
             st.text(response.text)
 
             if response.status_code == 200:
-                # JSONを手動でパース
-                data = json.loads(response.text)
-                if isinstance(data, list):
-                    for course in data:
-                        st.write(course)  # 各コースをそのまま表示
-                else:
-                    st.error("レスポンスがリスト形式ではありません。")
+                try:
+                    # JSONレスポンスをデコードして表示
+                    data = response.json()
+                    if isinstance(data, list):
+                        for course in data:
+                            # 各コース情報をきれいに表示
+                            st.subheader(course.get('コース名', 'コース名不明'))
+                            st.write(f"提供元: {course.get('提供元', '不明')}")
+                            st.write(f"内容: {course.get('内容', '不明')}")
+                            st.markdown("---")
+                    else:
+                        st.error("レスポンスがリスト形式ではありません。")
+                except json.JSONDecodeError:
+                    st.error("レスポンスがJSON形式ではありません。内容:")
+                    st.text(response.text)
             else:
                 st.error(f"エラー: ステータスコードが {response.status_code} です。")
         except Exception as e:
