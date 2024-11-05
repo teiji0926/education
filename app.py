@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import json
 
 # エンドポイントのURL
 url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
@@ -17,35 +18,20 @@ if st.button('コースを推薦する'):
             # ステータスコードを表示
             st.write(f"ステータスコード: {response.status_code}")
 
-            # responseオブジェクト全体を表示
-            st.write("APIレスポンス全体 (responseオブジェクト):")
-            st.write(response.text)  # レスポンスのテキストをそのまま表示
+            # レスポンス内容をそのまま表示して確認
+            st.write("APIレスポンス内容:")
+            st.text(response.text)
 
             if response.status_code == 200:
-                try:
-                    # JSONをリストとして解析
-                    data = response.json()
-                    if isinstance(data, list) and data:  # リスト形式かどうか確認
-                        for course in data:
-                            with st.container():
-                                st.subheader(course.get('コース名', 'コース名不明'))
-                                st.write(f"提供元: {course.get('提供元', '不明')}")
-                                st.write(f"内容: {course.get('内容', '不明')}")
-                                st.markdown("---")  # 区切り線
-                    else:
-                        st.error("コース情報が見つかりませんでした。")
-                except ValueError:
-                    st.error("レスポンスがJSON形式ではありません。内容:")
-                    st.text(response.text)
+                # JSONを手動でパース
+                data = json.loads(response.text)
+                if isinstance(data, list):
+                    for course in data:
+                        st.write(course)  # 各コースをそのまま表示
+                else:
+                    st.error("レスポンスがリスト形式ではありません。")
             else:
-                # ステータスコードが200以外の場合、エラーメッセージの詳細を表示
-                try:
-                    error_message = response.json()
-                    st.error(f"APIリクエストに失敗しました。ステータスコード: {response.status_code}, エラーメッセージ: {error_message}")
-                except ValueError:
-                    st.error(f"APIリクエストに失敗しました。ステータスコード: {response.status_code}")
-        except requests.Timeout:
-            st.error("リクエストがタイムアウトしました。時間をおいて再試行してください。")
+                st.error(f"エラー: ステータスコードが {response.status_code} です。")
         except Exception as e:
             st.error(f"リクエストエラー: {e}")
     else:
