@@ -27,7 +27,7 @@ if st.button('コースを推薦する'):
 
                 # ステータスコードを表示
                 st.write(f"ステータスコード: {response.status_code}")
-                st.write(response)
+                st.write(response.text)
 
                 # ステータスコードが200（成功）の場合
                 if response.status_code == 200:
