@@ -73,9 +73,6 @@ if app_selection == "キャリアカウンセラーアプリ":
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
 
-# 教育提案アプリ
-import re
-
 elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
     
