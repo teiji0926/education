@@ -3,7 +3,6 @@ import requests
 import re
 import time
 
-
 # 共通設定
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # リトライ間隔（秒）
@@ -14,21 +13,25 @@ app_selection = st.sidebar.radio("アプリを選択してください", ["キ�
 
 col1, col2, col3 = st.columns([1, 1, 1])  # 中央列を少し広めに設定
 
-
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
     
     with col2:
         st.image(
-        "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7",  
-        use_column_width=True)
-        
+            "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7",
+            use_column_width=True
+        )
+
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
 
-    # 会話履歴を保持するためのセッションステート
+    # セッションステートで状態を保持
     if 'conversation_history' not in st.session_state:
         st.session_state['conversation_history'] = []
+    if 'user_input' not in st.session_state:
+        st.session_state['user_input'] = ''
+    if 'response_ready' not in st.session_state:
+        st.session_state['response_ready'] = False
 
     # これまでの会話履歴を表示
     st.write("### 会話履歴")
@@ -37,38 +40,45 @@ if app_selection == "キャリアカウンセラーアプリ":
             st.write(chat["content"])
 
     # ユーザーの質問を入力
-    career_question = st.text_input('キャリアに関する相談を入力してください:', 'ここを消して入力：例）5年後もなくならない仕事ができるようになりたい')
+    career_question = st.text_input(
+        'キャリアに関する相談を入力してください:',
+        st.session_state['user_input'],
+        key='career_input'
+    )
 
-    # 相談するボタン
+    # 相談するボタンが押されたらステートを更新
     if st.button('相談する'):
         if career_question:
-            # ユーザーの入力を履歴に追加
+            # セッションステートを更新
+            st.session_state['user_input'] = career_question
             st.session_state['conversation_history'].append({"role": "user", "content": career_question})
+            st.session_state['response_ready'] = True
 
-            # AIの応答を処理
-            with st.spinner('相談内容を処理中です...'):
-                try:
-                    # Lambda 関数にリクエストを送信
-                    response = requests.post(
-                        url=counselor_url,
-                        json={
-                            "conversation_history": st.session_state['conversation_history'],
-                            "user_input": career_question
-                        },
-                        headers={"Content-Type": "application/json"}
-                    )
+    # Lambda 関数にリクエストを送信
+    if st.session_state['response_ready']:
+        with st.spinner('相談内容を処理中です...'):
+            try:
+                response = requests.post(
+                    url=counselor_url,
+                    json={
+                        "conversation_history": st.session_state['conversation_history'],
+                        "user_input": career_question
+                    },
+                    headers={"Content-Type": "application/json"}
+                )
 
-                    if response.status_code == 200:
-                        # Lambdaからの応答を取得
-                        result = response.json()
+                if response.status_code == 200:
+                    result = response.json()
+                    st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
+                else:
+                    st.error(f"エラー: ステータスコード {response.status_code}")
 
-                        # AIの応答を履歴に追加
-                        st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
-                    else:
-                        st.error(f"エラー: ステータスコード {response.status_code}")
+            except Exception as e:
+                st.error(f"リクエストエラー: {e}")
 
-                except Exception as e:
-                    st.error(f"リクエストエラー: {e}")
+            # リクエストが完了したらフラグをリセット
+            st.session_state['response_ready'] = False
+
 
 # 教育提案アプリ
 elif app_selection == "教育提案アプリ":
