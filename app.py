@@ -76,7 +76,7 @@ elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
 
     st.image(
-    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhZof730mrjOz5V7uKnP6I7WHry7hAdRVFTuEvTIDTnty5Vjrm6JHqh5jfCJp7VRE4TubG8EDyYT-loxD9q3z1rtyLxNEo51yXcePHsM41xaf2Fp54Ibmj1NlxjVDZcoVS3a1jI0y22uo/s800/search_mushimegane.png", 
+    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png", 
     caption="相談のイラスト", 
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
     width=50)
