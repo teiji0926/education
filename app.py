@@ -74,6 +74,8 @@ if app_selection == "キャリアカウンセラーアプリ":
                     st.error(f"リクエストエラー: {e}")
 
 # 教育提案アプリ
+import re
+
 elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
     
@@ -82,8 +84,8 @@ elif app_selection == "教育提案アプリ":
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png",  
             use_column_width=True
         )
-        st.text('検索には30秒くらいかかります。気長にお待ちください。')
-        st.text('503エラーの時は再検索してください')
+    st.text('検索には30秒くらいかかります。気長にお待ちください。')
+    st.text('503エラーの時は再検索してください')
 
     # APIエンドポイントのURL
     education_url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
@@ -98,31 +100,32 @@ elif app_selection == "教育提案アプリ":
                 try:
                     # APIリクエストを送信
                     response = requests.get(education_url, params={'career_goal': career_goal})
-                    st.write(response.text)
+                    st.write(response.txt)
+                    
+                    # レスポンス全体を表示（デバッグ用）
+                    st.write("### レスポンス内容")
+                    st.code(response.text, language="json")
 
-                    # ステータスコードをチェック
-                    if response.status_code == 200:
-                        try:
-                            # JSON文字列を辞書に変換
-                            data = json.loads(response.text)
-                            courses = data.get("cursos", [])  # "cursos"キーからコース情報を取得
+                    # 正規表現でコース情報を抽出
+                    course_pattern = re.compile(r'{.*?}')  # {}で囲まれた部分を抽出
+                    courses_raw = course_pattern.findall(response.text)
 
-                            # コース情報が存在する場合はカード形式で表示
-                            if courses:
-                                for course in courses:
-                                    with st.container():
-                                        st.markdown("---")  # 区切り線
-                                        st.markdown(f"### 提供元: {course.get('提供元', '不明')}")
-                                        st.markdown(f"**コース名**: {course.get('コース名', '不明')}")
-                                        st.markdown(f"**内容**: {course.get('内容', '不明')}")
-                            else:
-                                st.warning("該当するコースが見つかりませんでした。")
-
-                        except json.JSONDecodeError:
-                            st.error("レスポンスの形式が正しくありません。JSON形式ではない可能性があります。")
-
+                    if courses_raw:
+                        for course_str in courses_raw:
+                            try:
+                                # JSON形式に変換
+                                course = json.loads(course_str)
+                                
+                                # 各コース情報を表示
+                                with st.container():
+                                    st.markdown("---")  # 区切り線
+                                    st.markdown(f"### 提供元: {course.get('提供元', '不明')}")
+                                    st.markdown(f"**コース名**: {course.get('コース名', '不明')}")
+                                    st.markdown(f"**内容**: {course.get('内容', '不明')}")
+                            except json.JSONDecodeError:
+                                st.warning("コース情報の解析中にエラーが発生しました。")
                     else:
-                        st.error(f"エラー: ステータスコード {response.status_code}")
+                        st.warning("該当するコースが見つかりませんでした。")
 
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
