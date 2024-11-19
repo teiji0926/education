@@ -19,12 +19,17 @@ if app_selection == "キャリアカウンセラーアプリ":
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
 
-    # キャリア相談の入力
-    career_question = st.text_input('キャリアに関する相談を入力してください:', 'webエンジニアになりたい')
-
     # 履歴を保持するためのセッションステート
     if 'conversation_history' not in st.session_state:
         st.session_state['conversation_history'] = []
+
+    # キャリア相談の入力
+    st.write("### 会話履歴")
+    for chat in st.session_state['conversation_history']:
+        with st.chat_message(chat["role"]):
+            st.write(chat["content"])
+
+    career_question = st.text_input('キャリアに関する相談を入力してください:', '')
 
     if st.button('相談する'):
         if career_question:
@@ -49,14 +54,11 @@ if app_selection == "キャリアカウンセラーアプリ":
                         # AIの応答を履歴に追加
                         st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
 
-                        # 履歴を順に表示
-                        for message in st.session_state['conversation_history']:
-                            if message['role'] == "user":
-                                st.markdown(f"**あなた:** {message['content']}")
-                            elif message['role'] == "assistant":
-                                st.markdown(f"**AI:** {message['content']}")
+                        # 最新の履歴を更新
+                        st.experimental_rerun()
                     else:
                         st.error(f"エラー: ステータスコード {response.status_code}")
+
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
 
