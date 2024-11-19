@@ -97,16 +97,11 @@ elif app_selection == "教育提案アプリ":
                 try:
                     # APIリクエストを送信
                     response = requests.get(education_url, params={'career_goal': career_goal})
-                    st.write("### レスポンス内容")
                     
-                    # レスポンス全体を表示（デバッグ用）
-                    st.write(response.text)
-                    st.code(response.text, language="json")
-
                     # レスポンスを辞書形式に変換
                     try:
                         data = json.loads(response.text)
-                        courses = data.get("courses", [])  # "courses"キーからデータ取得
+                        courses = data.get("コース", [])  # "コース"キーからデータ取得
 
                         # コースが見つからなかった場合
                         if not courses:
@@ -124,3 +119,4 @@ elif app_selection == "教育提案アプリ":
 
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
+
