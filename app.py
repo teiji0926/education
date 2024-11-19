@@ -97,25 +97,22 @@ elif app_selection == "教育提案アプリ":
                 try:
                     # APIリクエストを送信
                     response = requests.get(education_url, params={'career_goal': career_goal})
-                    
-                    # レスポンスを辞書形式に変換
-                    try:
-                        data = json.loads(response.text)
-                        courses = data.get("コース", [])  # "コース"キーからデータ取得
 
-                        # コースが見つからなかった場合
-                        if not courses:
-                            st.warning("該当するコースが見つかりませんでした。")
-                        else:
-                            # コース情報を表示
-                            for course in courses:
-                                with st.container():
-                                    st.markdown("---")  # 区切り線
-                                    st.markdown(f"### 提供元: {course.get('提供元', '不明')}")
-                                    st.markdown(f"**コース名**: {course.get('コース名', '不明')}")
-                                    st.markdown(f"**内容**: {course.get('内容', '不明')}")
-                    except json.JSONDecodeError:
-                        st.error("レスポンスが正しいJSON形式ではありません。")
+                    # レスポンスを正規表現で解析
+                    pattern = r'{\s*"提供元":\s*"(.*?)",\s*"コース名":\s*"(.*?)",\s*"内容":\s*"(.*?)"\s*}'
+                    matches = re.findall(pattern, response.text)
+
+                    if matches:
+                        # コース情報をきれいに表示
+                        for match in matches:
+                            provider, course_name, description = match
+                            with st.container():
+                                st.markdown("---")  # 区切り線
+                                st.markdown(f"### 提供元: {provider}")
+                                st.markdown(f"**コース名**: {course_name}")
+                                st.markdown(f"**内容**: {description}")
+                    else:
+                        st.warning("該当するコースが見つかりませんでした。")
 
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
