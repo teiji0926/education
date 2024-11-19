@@ -22,6 +22,8 @@ if app_selection == "キャリアカウンセラーアプリ":
     # 履歴を保持するためのセッションステート
     if 'conversation_history' not in st.session_state:
         st.session_state['conversation_history'] = []
+    if 'response_ready' not in st.session_state:
+        st.session_state['response_ready'] = False
 
     # キャリア相談の入力
     st.write("### 会話履歴")
@@ -31,36 +33,39 @@ if app_selection == "キャリアカウンセラーアプリ":
 
     career_question = st.text_input('キャリアに関する相談を入力してください:', '')
 
+    # 相談するボタン
     if st.button('相談する'):
         if career_question:
             # ユーザーの質問を履歴に追加
             st.session_state['conversation_history'].append({"role": "user", "content": career_question})
+            st.session_state['response_ready'] = True  # フラグを立てる
 
-            with st.spinner('相談内容を処理中です...'):
-                try:
-                    # Lambda関数にリクエスト送信
-                    response = requests.post(
-                        url=counselor_url,
-                        json={
-                            "conversation_history": st.session_state['conversation_history'],  # 履歴全体を送信
-                            "user_input": career_question  # 今回の質問
-                        },
-                        headers={"Content-Type": "application/json"}
-                    )
+    # AIの応答を処理
+    if st.session_state['response_ready']:
+        with st.spinner('相談内容を処理中です...'):
+            try:
+                # Lambda関数にリクエスト送信
+                response = requests.post(
+                    url=counselor_url,
+                    json={
+                        "conversation_history": st.session_state['conversation_history'],  # 履歴全体を送信
+                        "user_input": career_question  # 今回の質問
+                    },
+                    headers={"Content-Type": "application/json"}
+                )
 
-                    if response.status_code == 200:
-                        result = response.json()
+                if response.status_code == 200:
+                    result = response.json()
 
-                        # AIの応答を履歴に追加
-                        st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
+                    # AIの応答を履歴に追加
+                    st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
+                else:
+                    st.error(f"エラー: ステータスコード {response.status_code}")
 
-                        # 最新の履歴を更新
-                        st.experimental_rerun()
-                    else:
-                        st.error(f"エラー: ステータスコード {response.status_code}")
-
-                except Exception as e:
-                    st.error(f"リクエストエラー: {e}")
+            except Exception as e:
+                st.error(f"リクエストエラー: {e}")
+            finally:
+                st.session_state['response_ready'] = False  # フラグをリセット
 
 # 教育提案アプリ
 elif app_selection == "教育提案アプリ":
