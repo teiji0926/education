@@ -65,7 +65,7 @@ if app_selection == "キャリアカウンセラーアプリ":
 
                         # AIの応答を履歴に追加
                         st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
-                        st.experimental_rerun()
+                        st.rerun
                     else:
                         st.error(f"エラー: ステータスコード {response.status_code}")
 
