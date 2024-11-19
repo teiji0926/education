@@ -12,50 +12,50 @@ RETRY_DELAY = 5  # リトライ間隔（秒）
 st.sidebar.title("アプリ選択")
 app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
 
-# キャリアカウンセラーアプリ
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
 
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
 
-    # 履歴を保持するためのセッションステート
+    # 会話履歴を保持するためのセッションステート
     if 'conversation_history' not in st.session_state:
         st.session_state['conversation_history'] = []
 
-    # キャリア相談の入力
+    # これまでの会話履歴を表示
     st.write("### 会話履歴")
     for chat in st.session_state['conversation_history']:
         with st.chat_message(chat["role"]):
             st.write(chat["content"])
 
+    # ユーザーの質問を入力
     career_question = st.text_input('キャリアに関する相談を入力してください:', '')
 
+    # 相談するボタン
     if st.button('相談する'):
         if career_question:
-            # ユーザーの質問を履歴に追加
+            # ユーザーの入力を履歴に追加
             st.session_state['conversation_history'].append({"role": "user", "content": career_question})
 
+            # AIの応答を処理
             with st.spinner('相談内容を処理中です...'):
                 try:
-                    # Lambda関数にリクエスト送信
+                    # Lambda 関数にリクエストを送信
                     response = requests.post(
                         url=counselor_url,
                         json={
-                            "conversation_history": st.session_state['conversation_history'],  # 履歴全体を送信
-                            "user_input": career_question  # 今回の質問
+                            "conversation_history": st.session_state['conversation_history'],
+                            "user_input": career_question
                         },
                         headers={"Content-Type": "application/json"}
                     )
 
                     if response.status_code == 200:
+                        # Lambdaからの応答を取得
                         result = response.json()
 
                         # AIの応答を履歴に追加
                         st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
-
-                        # 最新の履歴を更新
-                        st.experimental_rerun()
                     else:
                         st.error(f"エラー: ステータスコード {response.status_code}")
 
