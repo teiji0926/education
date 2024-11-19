@@ -3,25 +3,32 @@ import requests
 import re
 import time
 
+# ページの設定
 st.set_page_config(page_title="キャリアカウンセラーアプリ", layout="wide")
 
-# CSS を使用して特定の入力フィールドをカスタマイズ
+# CSS を使用して入力フィールドをカスタマイズ
 st.markdown(
     """
     <style>
-    /* 特定の text_input にカスタムスタイルを適用 */
-    #career_input {
-        background-color: #e6f7ff;  /* 背景を薄水色に設定 */
+    /* 常に見やすい薄水色の背景を適用 */
+    div[data-testid="stTextInput"] > div > input {
+        background-color: #e6f7ff;  /* 常に薄水色の背景 */
         color: #000;               /* 文字色を黒に */
-        border: 1px solid #ccc;    /* 枠線を薄いグレーに設定 */
+        border: 2px solid #ccc;    /* 枠線を薄いグレーに設定 */
         border-radius: 5px;        /* 角を少し丸く */
         padding: 10px;             /* 内側余白 */
         font-size: 16px;           /* フォントサイズを調整 */
     }
 
-    /* フォーカス時の強調スタイル */
-    #career_input:focus {
-        border: 2px solid #007bff; /* フォーカス時の枠線を青に変更 */
+    /* ホバー時のスタイル（オプション） */
+    div[data-testid="stTextInput"] > div > input:hover {
+        border: 2px solid #007bff; /* ホバー時に枠線を青色に変更 */
+    }
+
+    /* フォーカス時のスタイル */
+    div[data-testid="stTextInput"] > div > input:focus {
+        border: 2px solid #007bff; /* フォーカス時に枠線を青色に変更 */
+        background-color: #ffffff; /* フォーカス時に背景を白に変更（オプション） */
     }
     </style>
     """,
@@ -58,7 +65,7 @@ if app_selection == "キャリアカウンセラーアプリ":
             st.write(chat["content"])
 
     # ユーザーの質問を入力
-    career_question = st.text_input('キャリアに関する相談を入力してください:', '',key='career_input')
+    career_question = st.text_input('キャリアに関する相談を入力してください:', '')
 
     # 相談するボタン
     if st.button('相談する'):
