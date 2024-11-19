@@ -3,16 +3,6 @@ import requests
 import re
 import time
 
-
-# 共通設定
-MAX_RETRIES = 3
-RETRY_DELAY = 5  # リトライ間隔（秒）
-
-# サイドバーでアプリを選択
-st.sidebar.title("アプリ選択")
-app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
-
-
 st.set_page_config(page_title="キャリアカウンセラーアプリ", layout="wide")
 
 # CSS を使用して特定の入力フィールドをカスタマイズ
@@ -37,6 +27,18 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+# 共通設定
+MAX_RETRIES = 3
+RETRY_DELAY = 5  # リトライ間隔（秒）
+
+# サイドバーでアプリを選択
+st.sidebar.title("アプリ選択")
+app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
+
+
+
 
 
 if app_selection == "キャリアカウンセラーアプリ":
