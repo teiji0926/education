@@ -14,7 +14,7 @@ app_selection = st.sidebar.radio("アプリを選択してください", ["キ�
 
 # キャリアカウンセラーアプリ
 if app_selection == "キャリアカウンセラーアプリ":
-    st.title("キャリアカウンセラーアプリ")
+    st.title("キャリアカウンセラーアプリ2")
 
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
