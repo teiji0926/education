@@ -73,12 +73,21 @@ if app_selection == "キャリアカウンセラーアプリ":
 
 # 教育提案アプリ
 elif app_selection == "教育提案アプリ":
-    st.title("教育提案アプリ")
+    st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
+
+    st.image(
+    "https://1.bp.blogspot.com/-gARR6ehVBP8/UZB6YR-tXBI/AAAAAAAASCo/fZGPc8JEd6w/s800/search_mushimegane.png", 
+    caption="相談のイラスト", 
+    use_column_width=False,  # 列幅に合わせず、固定幅を使用
+    width=300)
+    
     st.text('検索には30秒くらいかかります。気長にお待ちください。')
     st.text('503エラーの時は再検索してください')
 
     # APIエンドポイントのURL
     education_url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
+
+
 
     # キャリア目標の入力
     career_goal = st.text_input('キャリア目標を入力してください:', 'ここを消して入力：例）AIエンジニア')
