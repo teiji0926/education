@@ -10,6 +10,7 @@ RETRY_DELAY = 5  # リトライ間隔（秒）
 # サイドバーでアプリを選択
 st.sidebar.title("アプリ選択")
 app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
+col1, col2, col3 = st.columns([1, 1, 1])  # 中央列を少し広めに設定
 
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
