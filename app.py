@@ -72,20 +72,19 @@ if app_selection == "キャリアカウンセラーアプリ":
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
 
-# 教育提案アプリ
 elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
+    
     with col2:
         st.image(
-        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png",  
-        use_column_width=True)
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png",  
+            use_column_width=True
+        )
         st.text('検索には30秒くらいかかります。気長にお待ちください。')
         st.text('503エラーの時は再検索してください')
 
     # APIエンドポイントのURL
     education_url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
-
-
 
     # キャリア目標の入力
     career_goal = st.text_input('キャリア目標を入力してください:', 'ここを消して入力：例）AIエンジニア')
@@ -94,43 +93,28 @@ elif app_selection == "教育提案アプリ":
     if st.button('コースを推薦する'):
         if career_goal:
             with st.spinner('検索中...しばらくお待ちください。'):
-                for attempt in range(MAX_RETRIES):
-                    try:
-                        # APIリクエストを送信
-                        response = requests.get(education_url, params={'career_goal': career_goal})
+                try:
+                    # APIリクエストを送信
+                    response = requests.get(education_url, params={'career_goal': career_goal})
 
-                        # ステータスコードを表示
-                        st.write(f"ステータスコード: {response.status_code}")
-                        st.write(response.text)
+                    # ステータスコードをチェック
+                    if response.status_code == 200:
+                        data = response.json()  # JSONレスポンスを解析
+                        courses = data.get("cursos", [])  # "cursos"キーからコース情報を取得
 
-                        # ステータスコードが200（成功）の場合
-                        if response.status_code == 200:
-                            # '''json''' タグを削除してリストの形式だけを表示する
-                            cleaned_text = re.sub(r"json|", "", response.text.strip())
-
-                            # 各コース情報を個別に表示
-                            courses = re.findall(r"{.*?}", cleaned_text)  # 各コース情報を抽出
-                            for course_str in courses:
-                                course_info = eval(course_str)  # 文字列を辞書に変換
-
-                                # 各項目を太字で大きめのサイズで強調表示
-                                st.markdown(f"<span style='font-size:20px; font-weight:bold;'>提供元: {course_info.get('提供元', '不明')}</span>", unsafe_allow_html=True)
-                                st.markdown(f"<span style='font-size:18px; font-weight:bold;'>コース名: {course_info.get('コース名', '不明')}</span>", unsafe_allow_html=True)
-                                st.markdown(f"<span style='font-size:16px;'>内容: {course_info.get('内容', '不明')}</span>", unsafe_allow_html=True)
-                                st.markdown("<hr>", unsafe_allow_html=True)  # 区切り線
-                            break  # 成功したらループを抜ける
-
+                        # コース情報が存在する場合はカード形式で表示
+                        if courses:
+                            for course in courses:
+                                with st.container():
+                                    st.markdown("---")  # 区切り線
+                                    st.markdown(f"### 提供元: {course.get('提供元', '不明')}")
+                                    st.markdown(f"**コース名**: {course.get('コース名', '不明')}")
+                                    st.markdown(f"**内容**: {course.get('内容', '不明')}")
                         else:
-                            st.warning(f"エラー: ステータスコードが {response.status_code} です。リトライ {attempt + 1} 回目")
-                            time.sleep(RETRY_DELAY)  # リトライ間隔
+                            st.warning("該当するコースが見つかりませんでした。")
 
-                    except Exception as e:
-                        st.error(f"リクエストエラー: {e}")
-                        time.sleep(RETRY_DELAY)  # リトライ間隔
+                    else:
+                        st.error(f"エラー: ステータスコード {response.status_code}")
 
-                # 最大リトライ回数に達した場合のエラーメッセージ
-                else:
-                    st.error("リトライしても503エラーが発生しました。後ほど再度お試しください。")
-
-        else:
-            st.warning('キャリア目標を入力してください。')
+                except Exception as e:
+                    st.error(f"リクエストエラー: {e}")
