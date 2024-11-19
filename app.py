@@ -22,7 +22,7 @@ if app_selection == "キャリアカウンセラーアプリ":
     "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7", 
     caption="相談のイラスト", 
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
-    width=300  # 幅を300ピクセルに調整)
+    width=300)
 
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
