@@ -3,38 +3,6 @@ import requests
 import re
 import time
 
-# ページの設定
-st.set_page_config(page_title="キャリアカウンセラーアプリ", layout="wide")
-
-# CSS を使用して入力フィールドをカスタマイズ
-st.markdown(
-    """
-    <style>
-    /* 常に見やすい薄水色の背景を適用 */
-    div[data-testid="stTextInput"] > div > input {
-        background-color: #e6f7ff;  /* 常に薄水色の背景 */
-        color: #000;               /* 文字色を黒に */
-        border: 2px solid #ccc;    /* 枠線を薄いグレーに設定 */
-        border-radius: 5px;        /* 角を少し丸く */
-        padding: 10px;             /* 内側余白 */
-        font-size: 16px;           /* フォントサイズを調整 */
-    }
-
-    /* ホバー時のスタイル（オプション） */
-    div[data-testid="stTextInput"] > div > input:hover {
-        border: 2px solid #007bff; /* ホバー時に枠線を青色に変更 */
-    }
-
-    /* フォーカス時のスタイル */
-    div[data-testid="stTextInput"] > div > input:focus {
-        border: 2px solid #007bff; /* フォーカス時に枠線を青色に変更 */
-        background-color: #ffffff; /* フォーカス時に背景を白に変更（オプション） */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 
 # 共通設定
 MAX_RETRIES = 3
@@ -65,7 +33,7 @@ if app_selection == "キャリアカウンセラーアプリ":
             st.write(chat["content"])
 
     # ユーザーの質問を入力
-    career_question = st.text_input('キャリアに関する相談を入力してください:', '')
+    career_question = st.text_input('キャリアに関する相談を入力してください:', 'ここを消して入力：例）5年後もなくならない仕事ができるようになりたい')
 
     # 相談するボタン
     if st.button('相談する'):
@@ -108,7 +76,7 @@ elif app_selection == "教育提案アプリ":
     education_url = 'https://53u1zlkx3h.execute-api.ap-northeast-1.amazonaws.com/stage1/education_test'
 
     # キャリア目標の入力
-    career_goal = st.text_input('キャリア目標を入力してください:', 'AIエンジニア')
+    career_goal = st.text_input('キャリア目標を入力してください:', 'ここを消して入力：例）AIエンジニア')
 
     # コースを推薦するボタン
     if st.button('コースを推薦する'):
