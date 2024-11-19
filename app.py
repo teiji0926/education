@@ -12,6 +12,33 @@ RETRY_DELAY = 5  # リトライ間隔（秒）
 st.sidebar.title("アプリ選択")
 app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
 
+
+st.set_page_config(page_title="キャリアカウンセラーアプリ", layout="wide")
+
+# CSS を使用して特定の入力フィールドをカスタマイズ
+st.markdown(
+    """
+    <style>
+    /* 特定の text_input にカスタムスタイルを適用 */
+    #career_input {
+        background-color: #e6f7ff;  /* 背景を薄水色に設定 */
+        color: #000;               /* 文字色を黒に */
+        border: 1px solid #ccc;    /* 枠線を薄いグレーに設定 */
+        border-radius: 5px;        /* 角を少し丸く */
+        padding: 10px;             /* 内側余白 */
+        font-size: 16px;           /* フォントサイズを調整 */
+    }
+
+    /* フォーカス時の強調スタイル */
+    #career_input:focus {
+        border: 2px solid #007bff; /* フォーカス時の枠線を青に変更 */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
 
@@ -29,7 +56,7 @@ if app_selection == "キャリアカウンセラーアプリ":
             st.write(chat["content"])
 
     # ユーザーの質問を入力
-    career_question = st.text_input('キャリアに関する相談を入力してください:', '')
+    career_question = st.text_input('キャリアに関する相談を入力してください:', '',key='career_input')
 
     # 相談するボタン
     if st.button('相談する'):
