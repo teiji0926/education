@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import re
+import json
 import time
 
 
@@ -72,6 +73,7 @@ if app_selection == "キャリアカウンセラーアプリ":
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
 
+# 教育提案アプリ
 elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
     
@@ -96,22 +98,28 @@ elif app_selection == "教育提案アプリ":
                 try:
                     # APIリクエストを送信
                     response = requests.get(education_url, params={'career_goal': career_goal})
+                    st.write(response.text)
 
                     # ステータスコードをチェック
                     if response.status_code == 200:
-                        data = response.json()  # JSONレスポンスを解析
-                        courses = data.get("cursos", [])  # "cursos"キーからコース情報を取得
+                        try:
+                            # JSON文字列を辞書に変換
+                            data = json.loads(response.text)
+                            courses = data.get("cursos", [])  # "cursos"キーからコース情報を取得
 
-                        # コース情報が存在する場合はカード形式で表示
-                        if courses:
-                            for course in courses:
-                                with st.container():
-                                    st.markdown("---")  # 区切り線
-                                    st.markdown(f"### 提供元: {course.get('提供元', '不明')}")
-                                    st.markdown(f"**コース名**: {course.get('コース名', '不明')}")
-                                    st.markdown(f"**内容**: {course.get('内容', '不明')}")
-                        else:
-                            st.warning("該当するコースが見つかりませんでした。")
+                            # コース情報が存在する場合はカード形式で表示
+                            if courses:
+                                for course in courses:
+                                    with st.container():
+                                        st.markdown("---")  # 区切り線
+                                        st.markdown(f"### 提供元: {course.get('提供元', '不明')}")
+                                        st.markdown(f"**コース名**: {course.get('コース名', '不明')}")
+                                        st.markdown(f"**内容**: {course.get('内容', '不明')}")
+                            else:
+                                st.warning("該当するコースが見つかりませんでした。")
+
+                        except json.JSONDecodeError:
+                            st.error("レスポンスの形式が正しくありません。JSON形式ではない可能性があります。")
 
                     else:
                         st.error(f"エラー: ステータスコード {response.status_code}")
