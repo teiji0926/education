@@ -22,7 +22,7 @@ if app_selection == "キャリアカウンセラーアプリ":
     "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7", 
     caption="相談のイラスト", 
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
-    width=100)
+    width=300)
 
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
@@ -79,7 +79,7 @@ elif app_selection == "教育提案アプリ":
     "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhZof730mrjOz5V7uKnP6I7WHry7hAdRVFTuEvTIDTnty5Vjrm6JHqh5jfCJp7VRE4TubG8EDyYT-loxD9q3z1rtyLxNEo51yXcePHsM41xaf2Fp54Ibmj1NlxjVDZcoVS3a1jI0y22uo/s800/search_mushimegane.png", 
     caption="相談のイラスト", 
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
-    width=300)
+    width=100)
     
     st.text('検索には30秒くらいかかります。気長にお待ちください。')
     st.text('503エラーの時は再検索してください')
