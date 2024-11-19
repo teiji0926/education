@@ -12,13 +12,12 @@ RETRY_DELAY = 5  # リトライ間隔（秒）
 st.sidebar.title("アプリ選択")
 app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
 
-col1, col2, col3 = st.columns([1, 2, 1])  # 中央列を少し広めに設定
-
-
+col1, col2, col3 = st.columns([1, 1, 1])  # 中央列を少し広めに設定
 
 
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
+    
     with col2:
         st.image(
         "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7",  
@@ -74,10 +73,12 @@ if app_selection == "キャリアカウンセラーアプリ":
 # 教育提案アプリ
 elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
+    
     with col2:
         st.image(
         "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png",  
         use_column_width=True)
+        
     st.text('検索には30秒くらいかかります。気長にお待ちください。')
     st.text('503エラーの時は再検索してください')
 
