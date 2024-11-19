@@ -18,7 +18,7 @@ app_selection = st.sidebar.radio("アプリを選択してください", ["キ�
 
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
-    sst.image(
+    st.image(
     "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7", 
     caption="相談のイラスト", 
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
