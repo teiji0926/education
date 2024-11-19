@@ -97,7 +97,7 @@ elif app_selection == "教育提案アプリ":
                 try:
                     # APIリクエストを送信
                     response = requests.get(education_url, params={'career_goal': career_goal})
-                    st.write(response.txt)
+                    st.write(response.text)
                     
                     # レスポンス全体を表示（デバッグ用）
                     st.write("### レスポンス内容")
