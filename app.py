@@ -13,14 +13,10 @@ st.sidebar.title("アプリ選択")
 app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
 
 
-
-
-
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
     st.image(
-    "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7", 
-    caption="相談のイラスト", 
+    "https://th.bing.com/th/id/OIP.Y23nBpZxgajNoKec58O0twHaHa?w=202&h=202&c=7&r=0&o=5&pid=1.7",  
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
     width=300)
 
@@ -77,7 +73,6 @@ elif app_selection == "教育提案アプリ":
 
     st.image(
     "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png", 
-    caption="相談のイラスト", 
     use_column_width=False,  # 列幅に合わせず、固定幅を使用
     width=50)
     
