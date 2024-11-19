@@ -11,8 +11,6 @@ RETRY_DELAY = 5  # リトライ間隔（秒）
 st.sidebar.title("アプリ選択")
 app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
 
-col1, col2, col3 = st.columns([1, 1, 1])  # 中央列を少し広めに設定
-
 if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
     
@@ -25,7 +23,7 @@ if app_selection == "キャリアカウンセラーアプリ":
     # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
 
-    # セッションステートで状態を保持
+    # セッションステートの初期化
     if 'conversation_history' not in st.session_state:
         st.session_state['conversation_history'] = []
     if 'user_input' not in st.session_state:
@@ -40,18 +38,16 @@ if app_selection == "キャリアカウンセラーアプリ":
             st.write(chat["content"])
 
     # ユーザーの質問を入力
-    career_question = st.text_input(
+    st.session_state['user_input'] = st.text_input(
         'キャリアに関する相談を入力してください:',
-        st.session_state['user_input'],
-        key='career_input'
+        value=st.session_state['user_input']
     )
 
-    # 相談するボタンが押されたらステートを更新
+    # 相談するボタン
     if st.button('相談する'):
-        if career_question:
-            # セッションステートを更新
-            st.session_state['user_input'] = career_question
-            st.session_state['conversation_history'].append({"role": "user", "content": career_question})
+        if st.session_state['user_input']:
+            # ユーザーの入力を履歴に追加
+            st.session_state['conversation_history'].append({"role": "user", "content": st.session_state['user_input']})
             st.session_state['response_ready'] = True
 
     # Lambda 関数にリクエストを送信
@@ -62,22 +58,23 @@ if app_selection == "キャリアカウンセラーアプリ":
                     url=counselor_url,
                     json={
                         "conversation_history": st.session_state['conversation_history'],
-                        "user_input": career_question
+                        "user_input": st.session_state['user_input']
                     },
                     headers={"Content-Type": "application/json"}
                 )
 
                 if response.status_code == 200:
                     result = response.json()
+                    # AIの応答を履歴に追加
                     st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
                 else:
                     st.error(f"エラー: ステータスコード {response.status_code}")
 
             except Exception as e:
                 st.error(f"リクエストエラー: {e}")
-
-            # リクエストが完了したらフラグをリセット
-            st.session_state['response_ready'] = False
+            finally:
+                # リクエストが完了したらフラグをリセット
+                st.session_state['response_ready'] = False
 
 
 # 教育提案アプリ
