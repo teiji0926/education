@@ -75,9 +75,9 @@ if app_selection == "キャリアカウンセラーアプリ":
 elif app_selection == "教育提案アプリ":
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
     with col2:
-    st.image(
-    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png",  
-    use_column_width=True)
+        st.image(
+        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi8vyJho9t80345AD_apyUqcEZ_buav7VArC19VWGSX3j_xeKrs3J1pAYjHqKKP_gfsctyC3uya943aZK53aqBnxlb-yHo-Np1CcxFK6Drzwd0q3uvOU4MgHuwvLOiVy7vmP2JkRRBLfm1g/s800/searchbox14.png",  
+        use_column_width=True)
     st.text('検索には30秒くらいかかります。気長にお待ちください。')
     st.text('503エラーの時は再検索してください')
 
