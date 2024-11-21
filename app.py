@@ -112,6 +112,7 @@ elif app_selection == "教育提案アプリ":
                                 st.markdown(f"**コース名**: {course_name}")
                                 st.markdown(f"**内容**: {description}")
                     else:
+                        st.write(response.text)
                         st.warning("該当するコースが見つかりませんでした。")
 
                 except Exception as e:
