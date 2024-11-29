@@ -19,6 +19,10 @@ def switch_page(page_name):
     st.session_state['page'] = page_name
     st.experimental_rerun()
 
+# ページの切り替え用関数
+def switch_page(page_name):
+    st.session_state['page'] = page_name  # 状態を更新
+
 # ホームページ
 if st.session_state['page'] == 'home':
     st.title("アプリへようこそ！")
@@ -35,7 +39,10 @@ if st.session_state['page'] == 'home':
 # キャリアカウンセラーアプリ
 elif st.session_state['page'] == 'career':
     st.title("キャリアカウンセラーアプリ")
-    st.button("ホームに戻る", on_click=lambda: switch_page('home'))  # ホームへの戻りリンク
+   　# ホームページへの戻りボタンの使い方修正
+    if st.button("ホームに戻る"):
+        switch_page('home')  # `on_click`ではなく直接呼び出す
+        st.experimental_rerun()  # ページリロード
 
     st.title("キャリアカウンセラーアプリ")
     with col2:
@@ -93,7 +100,10 @@ elif st.session_state['page'] == 'career':
 
 elif st.session_state['page'] == 'education':
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
-    st.button("ホームに戻る", on_click=lambda: switch_page('home'))  # ホームへの戻りリンク
+    # ホームページへの戻りボタンの使い方修正
+    if st.button("ホームに戻る"):
+        switch_page('home')  # `on_click`ではなく直接呼び出す
+        st.experimental_rerun()  # ページリロード
     
     with col2:
         st.image(
