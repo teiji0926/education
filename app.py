@@ -74,6 +74,7 @@ elif st.session_state['page'] == 'career':
                     if response.status_code == 200:
                         result = response.json()
                         st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
+                        st.rerun()
                     else:
                         st.error(f"エラー: ステータスコード {response.status_code}")
                 except Exception as e:
