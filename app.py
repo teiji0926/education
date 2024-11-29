@@ -19,6 +19,7 @@ def switch_page(page_name):
 # ホームページ
 if st.session_state['page'] == 'home':
     st.title("アプリへようこそ！")
+    st.image('https://1.bp.blogspot.com/-1jq9R-na21U/Xwhip410sFI/AAAAAAAAAAY/fLO-FzWFlU8eKiCA5-IWAR22YoC1mM8-QCLcBGAsYHQ/s2048/real-ai.jpg')
     st.write("以下からアプリを選択してください。")
 
     # キャリアカウンセラーアプリへのリンク
