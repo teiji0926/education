@@ -8,6 +8,7 @@ import time
 # 共通設定
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # リトライ間隔（秒）
+col1, col2, col3 = st.columns([1, 2, 1]) 
 
 # セッションステートでページを管理
 if 'page' not in st.session_state:
