@@ -15,7 +15,6 @@ if 'page' not in st.session_state:
 # ページの切り替え用関数
 def switch_page(page_name):
     st.session_state['page'] = page_name
-    st.experimental_rerun()
 
 # ホームページ
 if st.session_state['page'] == 'home':
@@ -34,9 +33,8 @@ if st.session_state['page'] == 'home':
 elif st.session_state['page'] == 'career':
     st.title("キャリアカウンセラーアプリ")
     if st.button("ホームに戻る"):
-        switch_page('home')  # 状態を変更してリロード
+        switch_page('home')
 
-    # カラムの定義（ここでのみ使用）
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
@@ -45,23 +43,18 @@ elif st.session_state['page'] == 'career':
             use_column_width=True
         )
         
-    # Lambda 関数のエンドポイント URL
     counselor_url = 'https://pg2galxz0c.execute-api.ap-northeast-1.amazonaws.com/stage1/'
 
-    # 会話履歴を保持するためのセッションステート
     if 'conversation_history' not in st.session_state:
         st.session_state['conversation_history'] = []
 
-    # これまでの会話履歴を表示
     st.write("### 会話履歴")
     for chat in st.session_state['conversation_history']:
         with st.chat_message(chat["role"]):
             st.write(chat["content"])
 
-    # ユーザーの質問を入力
     career_question = st.text_input('キャリアに関する相談を入力してください:', 'ここを消して入力：例）5年後もなくならない仕事ができるようになりたい')
 
-    # 相談するボタン
     if st.button('相談する'):
         if career_question:
             st.session_state['conversation_history'].append({"role": "user", "content": career_question})
@@ -80,7 +73,6 @@ elif st.session_state['page'] == 'career':
                     if response.status_code == 200:
                         result = response.json()
                         st.session_state['conversation_history'].append({"role": "assistant", "content": result["response"]})
-                        st.experimental_rerun()
                     else:
                         st.error(f"エラー: ステータスコード {response.status_code}")
                 except Exception as e:
@@ -90,9 +82,8 @@ elif st.session_state['page'] == 'career':
 elif st.session_state['page'] == 'education':
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
     if st.button("ホームに戻る"):
-        switch_page('home')  # 状態を変更してリロード
+        switch_page('home')
 
-    # カラムの定義（ここでのみ使用）
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
