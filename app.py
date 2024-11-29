@@ -39,7 +39,7 @@ if st.session_state['page'] == 'home':
 # キャリアカウンセラーアプリ
 elif st.session_state['page'] == 'career':
     st.title("キャリアカウンセラーアプリ")
-   　# ホームページへの戻りボタンの使い方修正
+    #ホームページへの戻りボタンの使い方修正
     if st.button("ホームに戻る"):
         switch_page('home')  # `on_click`ではなく直接呼び出す
         st.experimental_rerun()  # ページリロード
@@ -100,7 +100,7 @@ elif st.session_state['page'] == 'career':
 
 elif st.session_state['page'] == 'education':
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
-    # ホームページへの戻りボタンの使い方修正
+    #ホームページへの戻りボタンの使い方修正
     if st.button("ホームに戻る"):
         switch_page('home')  # `on_click`ではなく直接呼び出す
         st.experimental_rerun()  # ページリロード
