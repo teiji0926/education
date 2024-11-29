@@ -9,16 +9,33 @@ import time
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # リトライ間隔（秒）
 
-# サイドバーでアプリを選択
-st.sidebar.title("アプリ選択")
-app_selection = st.sidebar.radio("アプリを選択してください", ["キャリアカウンセラーアプリ", "教育提案アプリ"])
+# セッションステートでページを管理
+if 'page' not in st.session_state:
+    st.session_state['page'] = 'home'  # 初期状態はホームページ
 
-col1, col2, col3 = st.columns([1, 2, 1])  # 中央列を少し広めに設定
+# ページの切り替え用関数
+def switch_page(page_name):
+    st.session_state['page'] = page_name
+    st.experimental_rerun()
 
+# ホームページ
+if st.session_state['page'] == 'home':
+    st.title("アプリへようこそ！")
+    st.write("以下からアプリを選択してください。")
+    
+    # キャリアカウンセラーアプリへのリンク
+    if st.button("キャリアカウンセラーアプリ"):
+        switch_page('career')
 
+    # 教育提案アプリへのリンク
+    if st.button("教育提案アプリ"):
+        switch_page('education')
 
+# キャリアカウンセラーアプリ
+elif st.session_state['page'] == 'career':
+    st.title("キャリアカウンセラーアプリ")
+    st.button("ホームに戻る", on_click=lambda: switch_page('home'))  # ホームへの戻りリンク
 
-if app_selection == "キャリアカウンセラーアプリ":
     st.title("キャリアカウンセラーアプリ")
     with col2:
         st.image(
@@ -73,8 +90,9 @@ if app_selection == "キャリアカウンセラーアプリ":
                 except Exception as e:
                     st.error(f"リクエストエラー: {e}")
 
-elif app_selection == "教育提案アプリ":
+elif st.session_state['page'] == 'education':
     st.title("教育提案アプリ　LinkedInとAidemyから研修を検索してきます")
+    st.button("ホームに戻る", on_click=lambda: switch_page('home'))  # ホームへの戻りリンク
     
     with col2:
         st.image(
